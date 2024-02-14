@@ -13,6 +13,7 @@ app.use(express.json())
 //microservicio people
 app.use("/",require("./modules/people"));
 app.use("/",require("./modules/history"));
+app.use("/",require("./modules/users"));
 
 app.listen(port,()=>{
     console.log(`app encendida en el port: ${port}`);
