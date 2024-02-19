@@ -77,8 +77,18 @@ people.post("/people/create",(req,res)=>{
     });
 })
 
+/**
+ * Description placeholder
+ * @date 2/19/2024 - 6:55:53 AM
+ *@autor kevin alzate
+ *@description actualiza las personas, recibe el id y la data del formulario body
+ * @param {*} req
+ * @param {*} res
+ */
+
 //actualizar un registro
-people.put("/people/update/:id",(req,res)=>{
+people.put("/people/update/:id",
+(req,res)=>{
     let id = req.params.id; //parametro
     let frmData ={
         name: req.body.name,
@@ -88,6 +98,8 @@ people.put("/people/update/:id",(req,res)=>{
         type: req.body.type,
     } 
    
+
+    
     cnx.query("UPDATE people set ? WHERE id=?",[frmData,id],(error,data)=>{
     try{
         res.status(200).send("Actualización exitosa")
@@ -95,10 +107,10 @@ people.put("/people/update/:id",(req,res)=>{
     catch (error){
         console.log(error);
         // throw `hay un error en la consulta: ${error}`
-/*         res.status(404).send({
+        res.status(404).send({
             id:error.id,
             mensaje:error.message,
-        }); */
+        });
     }
     });
 })
