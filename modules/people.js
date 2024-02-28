@@ -3,6 +3,24 @@
 const express = require("express");
 const people = express.Router();
 const cnx = require("./bdata");
+const multer = require("multer");
+const fs = require("fs");
+const path = require("node:path")
+//configuracion del multer 
+//creacion del espacio de almacenamiento en el servidor 
+const almacenamiento = multer.diskStorage({
+    //destination es una variable de multer para configurar el directorio de destino de la API 
+    //(recordar cerrar la ruta con el slash "/")
+    destination:  (req, file, cb)=> {
+      cb(null, './uploads/people/')
+    },
+    //configuracion de nombre del archivo a guardar en el disco duro de la API 
+    filename:  (req, file, cb)=> {
+      cb(null, "people" + '-' + Date.now()+file.originalname)
+    }
+  })
+  
+  const upload = multer({ storage: almacenamiento })
 
 /* Desarrollo del crud */
 
@@ -116,6 +134,58 @@ people.put("/people/update/:id",
 })
 
 
+//subir imagen, tener en cuenta el middeleware de multer que configuramos en el objeto upload
+people.put("/people/uploadimage/:id",[upload.single("photo")],(req,res)=>{
+    //validacion 
+    // 1. que llegue un archivo 
+    if(!req.file && !req.files){
+        res.status(404).send({
+            status:"error",
+            message:"No existe el archivo"
+        });
+        return; // Agrega un retorno para evitar que el código siga ejecutándose
+    }
+
+    
+    //obtener la extension png , jpg , jpeg
+    let archivo = req.file.originalname;
+    let extension = archivo.split(".");
+    extension=extension[1];
+
+    if(extension != "png" && extension != "jpg" && extension != "jpeg"){
+
+        fs.unlink(req.file.path,(error)=>{
+            res.status(404).send({
+                status:"error",
+                message:"fallo el borrado"
+            });
+        });
+    
+      
+    }
+
+    //recibimos el parametro id 
+    let id = req.params.id;
+    //recibimos la imagen a subir
+    let photo = req.file.filename;
+    //ejecutamos la consulta de actualizacion de la imagen
+    cnx.query("UPDATE people set photo =? WHERE id = ?", [photo, id], (error, data) => {
+        if (error) {
+            res.status(404).send({
+                status: "error",
+                message: "Error de actualizacion",
+                details: error.message
+            });
+        }else{
+            res.status(200).send({
+                status: "ok",
+                message: "Actualizacion exitosa de la imagen"
+            });
+        }
+
+        
+    });
+});
 
 
 //eliminar por id 

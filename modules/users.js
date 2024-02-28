@@ -4,6 +4,7 @@ const express = require("express");
 const users = express.Router();
 const cnx = require("./bdata");
 
+
 /* Desarrollo del crud */
 
 //Consultar
