@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 28-02-2024 a las 14:18:48
+-- Tiempo de generación: 11-03-2024 a las 12:47:21
 -- Versión del servidor: 10.4.25-MariaDB
 -- Versión de PHP: 8.1.10
 
@@ -20,6 +20,20 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `interpolice`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `history`
+--
+
+CREATE TABLE `history` (
+  `id` int(11) NOT NULL,
+  `descripcion` varchar(150) NOT NULL,
+  `fecha` date NOT NULL,
+  `nota` varchar(250) NOT NULL,
+  `id_people` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -70,9 +84,40 @@ INSERT INTO `people` (`id`, `name`, `lastname`, `nickname`, `photo`, `email`, `t
 (27, 'kevin', 'alzate', 'sweet', '', 'ssweet@gmail.com', 1),
 (31, 'kevin', 'alzate', 'gg', '', 'gg@gmail.com', 0);
 
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `name` varchar(150) NOT NULL,
+  `lastname` varchar(150) NOT NULL,
+  `position` varchar(150) NOT NULL,
+  `email` varchar(200) NOT NULL,
+  `password` varchar(256) NOT NULL,
+  `photo` varchar(200) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `users`
+--
+
+INSERT INTO `users` (`id`, `name`, `lastname`, `position`, `email`, `password`, `photo`) VALUES
+(1, 'chacho', 'perez', 'administrator', 'prz@gmail.com', '12345', 'https://i.imgur.com/9q1fUg1.png'),
+(2, 'andres', 'alzate', 'gerente', 'andre@gmail.com', '123', 'https://i.imgur.com/9q1fUg1.png');
+
 --
 -- Índices para tablas volcadas
 --
+
+--
+-- Indices de la tabla `history`
+--
+ALTER TABLE `history`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `history_ibfk_1` (`id_people`);
 
 --
 -- Indices de la tabla `people`
@@ -81,14 +126,42 @@ ALTER TABLE `people`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT de las tablas volcadas
 --
+
+--
+-- AUTO_INCREMENT de la tabla `history`
+--
+ALTER TABLE `history`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `people`
 --
 ALTER TABLE `people`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+
+--
+-- AUTO_INCREMENT de la tabla `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `history`
+--
+ALTER TABLE `history`
+  ADD CONSTRAINT `history_ibfk_1` FOREIGN KEY (`id_people`) REFERENCES `people` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
