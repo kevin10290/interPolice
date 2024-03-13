@@ -62,29 +62,26 @@ people.get("/people/listing/:id", (req, res) => {
 });
 
 //insertar una persona
-people.post("/people/create", (req, res) => {
+people.post("/people/create",upload.single("photo"), (req, res) => {
   let frmData = {
     name: req.body.name,
     lastname: req.body.lastname,
     nickname: req.body.nickname,
     email: req.body.email,
     type: req.body.type,
+    photo: req.file.filename
   };
 
   cnx.query("INSERT INTO people set ?", frmData, (error, data) => {
     try {
       if (!error) {
-        res.status(200).redirect("http://127.0.0.1:5500/api/index.html");
+        res.status(200).redirect("/pages/people/Listar.html");
       } else {
         res.status(500).send(error);
       }
     } catch (error) {
       console.log(error);
-      // throw `hay un error en la consulta: ${error}`
-      /*         res.status(404).send({
-            id:error.id,
-            mensaje:error.message,
-        }); */
+      res.status(500).send(error);
     }
   });
 });

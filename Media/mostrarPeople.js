@@ -6,6 +6,7 @@ fetch("http://localhost:3000/people/listing")
     datos.forEach(element => {
         tablaPeople.innerHTML+=`
         <tr>
+        <td><img src="/uploads/people/${element.photo}" alt="Foto de ${element.name}"></td>
             <td style="width:10pc; ">${element.name}</td>
             <td style="width:15pc; ">${element.lastname}</td>
             <td style="width:20pc; ">${element.nickname}</td>
